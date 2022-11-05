@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "930941011253",
+    "project_id": "locpay-a88e4",
+    "storage_bucket": "locpay-a88e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930941011253:android:d82a22f2d35265419af87c",
+        "android_client_info": {
+          "package_name": "com.vedasjad.locpay.locpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930941011253-s4jv6i0uc1keipk97gkigqckubcvqhrm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vedasjad.locpay.locpay",
+            "certificate_hash": "95eea4deed560019433bc3fe65b6a92e523c300a"
+          }
+        },
+        {
+          "client_id": "930941011253-nqram0bv0uo97fj5vgh2ss6dmq0i253t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWpPWLLHJgltMWP5t6rI5ZD4UXLu91rWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930941011253-nqram0bv0uo97fj5vgh2ss6dmq0i253t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
