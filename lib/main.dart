@@ -6,6 +6,7 @@ import 'package:locpay/screens/home_screen.dart';
 import 'package:locpay/screens/auth_screen.dart';
 import 'package:locpay/services/google_signin.dart';
 import 'package:provider/provider.dart';
+import 'package:locpay/widgets/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => GoogleSignInProvider(),
         child: MaterialApp(
+          scaffoldMessengerKey: Utils.messengerKey,
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           home: const SplashScreen(),

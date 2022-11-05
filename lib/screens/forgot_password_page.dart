@@ -1,39 +1,28 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
-import 'package:locpay/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:locpay/main.dart';
+import 'package:flutter/gestures.dart';
 import 'package:locpay/widgets/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:locpay/constants.dart';
+import 'package:flutter/services.dart';
 
-class SignUpWidget extends StatefulWidget {
+class ForgotPasswordPage extends StatefulWidget {
   final Function() onClickedSignIn;
-  const SignUpWidget({Key? key, required this.onClickedSignIn})
+  const ForgotPasswordPage({Key? key, required this.onClickedSignIn})
       : super(key: key);
 
   @override
-  State<SignUpWidget> createState() => _SignUpWidgetState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _SignUpWidgetState extends State<SignUpWidget> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _userSignupFormKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
 
+  TextEditingController emailController = TextEditingController();
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
-  }
-
-  bool _obscureText = true;
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
   }
 
   @override
@@ -69,63 +58,13 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                           const Padding(
                             padding: EdgeInsets.all(15.0),
                             child: Text(
-                              "Welcome",
+                              "Get Password Reset Mail",
                               style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.w900,
-                                fontSize: 32.0,
+                                fontSize: 25.0,
                                 color: Colors.white,
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5.0, right: 14, left: 14, bottom: 8),
-                            child: TextFormField(
-                              controller: nameController,
-                              textInputAction: TextInputAction.next,
-                              textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(
-                                color: kContainerColour,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                labelText: 'Name',
-                                labelStyle: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kContainerColour,
-                                ),
-                                hintText: "Walter White",
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kHintColour,
-                                ),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 5.0),
-                              ),
-                              cursorColor: Colors.black,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.singleLineFormatter,
-                              ],
                             ),
                           ),
                           Padding(
@@ -156,7 +95,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                     Radius.circular(15),
                                   ),
                                 ),
-                                labelText: 'New Email',
+                                labelText: 'Email',
                                 labelStyle: TextStyle(
                                   fontFamily: 'Ubuntu',
                                   fontSize: 17,
@@ -186,79 +125,14 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                               },
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5.0, right: 14, left: 14, bottom: 8),
-                            child: TextFormField(
-                              textInputAction: TextInputAction.done,
-                              controller: passwordController,
-                              obscureText: _obscureText,
-                              style: const TextStyle(
-                                color: kContainerColour,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.0,
-                                fontSize: 17,
-                              ),
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                labelText: 'Password',
-                                labelStyle: const TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kContainerColour,
-                                ),
-                                hintText: "x37ru82#",
-                                hintStyle: const TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kHintColour,
-                                ),
-                                contentPadding: const EdgeInsets.fromLTRB(
-                                    20.0, 15.0, 20.0, 5.0),
-                                suffixIcon: IconButton(
-                                  color: kContainerColour,
-                                  icon: Icon(
-                                    _obscureText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
-                                  onPressed: _toggle,
-                                ),
-                              ),
-                              cursorColor: Colors.black,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.singleLineFormatter,
-                              ],
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                value != null && value.length < 6
-                                    ? 'Enter minimum 6 characters'
-                                    : null;
-                                return null;
-                              },
-                            ),
-                          ),
                           const SizedBox(
                             height: 10,
                           ),
                           InkWell(
-                            onTap: signUp,
+                            onTap: () {
+                              resetPassword;
+                              widget.onClickedSignIn;
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.height / 18,
@@ -269,7 +143,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                               ),
                               child: const Center(
                                 child: Text(
-                                  'Sign Up',
+                                  'Reset Password',
                                   style: TextStyle(
                                     fontFamily: 'Ubuntu',
                                     fontSize: 18.0,
@@ -299,7 +173,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                                           fontSize: 13.0,
                                           color: Colors.white,
                                         ),
-                                        text: 'Already have an account? ',
+                                        text: 'Remember Password? ',
                                         children: [
                                           TextSpan(
                                             recognizer: TapGestureRecognizer()
@@ -334,10 +208,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  Future signUp() async {
-    final isValid = _userSignupFormKey.currentState!.validate();
-    if (!isValid) return;
-
+  Future resetPassword() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -345,16 +216,19 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         child: CircularProgressIndicator(),
       ),
     );
+
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
+
+      await Utils.showSnackBar('Password Reset Email Sent');
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
 
       Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    // navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

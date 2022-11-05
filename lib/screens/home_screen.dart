@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:locpay/screens/login_screen.dart';
 import 'package:locpay/screens/upi_list_screen.dart';
-import 'package:locpay/services/firebase_services.dart';
+// import 'package:locpay/services/firebase_services.dart';
+import 'package:locpay/services/google_signin.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../constants.dart';
 import 'package:locpay/services/location.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:locpay/screens/scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:locpay/services/user_info.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
 enum MenuItem {
   item1,
@@ -21,18 +24,18 @@ enum MenuItem {
 //#00ADB4
 //#EEEEEE
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: HomeScreen(),
+//     );
+//   }
+// }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -44,7 +47,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // int _selectedIndex = 0;
   //
-  final user = FirebaseAuth.instance.currentUser!;
+  // final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser;
   //
   // void _onItemTapped(int index) {
   //   setState(() {
@@ -81,7 +85,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-
+    var name = '';
+    if (user != null && user!.displayName != null) {
+      if (user!.displayName != null) {
+        debugPrint(user!.displayName.toString());
+        name = user!.displayName!;
+        debugPrint(name);
+      } else {
+        name = 'Asjad';
+      }
+    } else {
+      name = 'Asjad';
+      debugPrint(name);
+    }
     return Scaffold(
       backgroundColor: kIconColour,
       body: SafeArea(
@@ -119,13 +135,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       PopupMenuButton<MenuItem>(
                         onSelected: (item1) async {
+                          // showDialog(
+                          //   context: context,
+                          //   barrierDismissible: false,
+                          //   builder: (context) => const Center(
+                          //     child: CircularProgressIndicator(),
+                          //   ),
+                          // );
+                          final provider = Provider.of<GoogleSignInProvider>(
+                              context,
+                              listen: false);
+                          provider.logout();
+                          debugPrint(FirebaseAuth
+                              .instance.currentUser!.displayName
+                              .toString());
                           FirebaseAuth.instance.signOut();
-                          Navigator.push(
+                          // navigatorKey.currentState!
+                          //     .popUntil((route) => route.isFirst);
+                          await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => const LoginScreen(
                                       onClickedSignUp: true)));
-                          await FirebaseServices().googlesignOut();
                         },
                         itemBuilder: (context) => [
                           const PopupMenuItem(
@@ -171,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hey, ${user.displayName!}!',
+                  'Hey, $name!',
                   style: const TextStyle(
                     fontFamily: 'Raleway',
                     color: kIconColour,
