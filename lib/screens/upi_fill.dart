@@ -142,12 +142,12 @@ class _UpiFillState extends State<UpiFill> {
     );
   }
 
-  Future createUser(Beneficiary beneficiary) async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc();
-    beneficiary.id = docUser.id;
-    final json = beneficiary.toJson();
-    await docUser.set(json);
-  }
+  // Future createUser(Beneficiary beneficiary) async {
+  //   final docUser = FirebaseFirestore.instance.collection('users').doc();
+  //   beneficiary.id = docUser.id;
+  //   final json = beneficiary.toJson();
+  //   await docUser.set(json);
+  // }
 
   @override
   Widget build(BuildContext context) {

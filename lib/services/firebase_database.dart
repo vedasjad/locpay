@@ -1,10 +1,8 @@
-import 'dart:convert';
-
-class Usera {
+class Payer {
   final String name;
   final String email;
 
-  Usera({
+  Payer({
     required this.name,
     required this.email,
   });
@@ -14,7 +12,7 @@ class Usera {
         'email': email,
       };
 
-  static Usera fromJson(Map<String, dynamic> json) => Usera(
+  static Payer fromJson(Map<String, dynamic> json) => Payer(
         name: json['name'],
         email: json['email'],
       );

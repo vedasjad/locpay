@@ -6,6 +6,11 @@ import 'package:locpay/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locpay/main.dart';
 import 'package:locpay/widgets/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:locpay/services/firebase_database.dart';
+import 'package:locpay/services/user_information.dart';
+import 'auth_screen.dart';
+import 'package:locpay/services/globals.dart' as globals;
 
 class SignUpWidget extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -21,6 +26,24 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+
+  Widget buildPayer(Payer payer) => ListTile(
+        leading: CircleAvatar(
+          child: Text(payer.name),
+        ),
+        title: Text(payer.name),
+        subtitle: Text(payer.email),
+      );
+
+  Future createPayer(Payer user) async {
+    final docUser = FirebaseFirestore.instance
+        .collection('users')
+        .doc(emailController.text);
+
+    final json = user.toJson();
+
+    await docUser.set(json);
+  }
 
   @override
   void dispose() {
@@ -258,7 +281,20 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                             height: 10,
                           ),
                           InkWell(
-                            onTap: signUp,
+                            onTap: () async {
+                              signUp();
+                              // globals.name = nameController.text;
+                              // globals.email = emailController.text;
+                              // UserInformation().email = emailController.text;
+                              // UserInformation().name = nameController.text;
+                              final user = Payer(
+                                name: nameController.text,
+                                email: emailController.text,
+                              );
+                              createPayer(user);
+                              readPayer();
+                              debugPrint('${globals.name}k');
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.height / 18,
@@ -346,10 +382,14 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       ),
     );
     try {
+      // readPayer();
+      // debugPrint('${name}k');
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      readPayer();
+      debugPrint('${name}k');
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
 

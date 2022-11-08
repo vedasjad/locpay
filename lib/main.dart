@@ -7,6 +7,7 @@ import 'package:locpay/screens/auth_screen.dart';
 import 'package:locpay/services/google_signin.dart';
 import 'package:provider/provider.dart';
 import 'package:locpay/widgets/utils.dart';
+import 'package:locpay/services/user_information.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,12 +33,19 @@ class MyApp extends StatelessWidget {
       );
 }
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    readPayer();
+    debugPrint('${name}f');
     return Scaffold(
       body: AnimatedSplashScreen(
         splash: 'images/LOC-PAY.png',

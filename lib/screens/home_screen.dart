@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:locpay/screens/auth_screen.dart';
 import 'package:locpay/screens/login_screen.dart';
 import 'package:locpay/screens/upi_list_screen.dart';
 // import 'package:locpay/services/firebase_services.dart';
@@ -9,9 +10,13 @@ import 'package:locpay/services/location.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:locpay/screens/scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:locpay/services/user_info.dart';
 import 'package:provider/provider.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:locpay/services/firebase_database.dart';
+import 'package:locpay/services/user_information.dart';
+import 'package:locpay/services/globals.dart' as globals;
+// import 'package:firebase_database/firebase_database.dart';
+// import 'signin_screen.dart';
 // void main() {
 //   runApp(const MyApp());
 // }
@@ -49,12 +54,19 @@ class _HomeScreenState extends State<HomeScreen> {
   //
   // final user = FirebaseAuth.instance.currentUser!;
   final user = FirebaseAuth.instance.currentUser;
+  // final String email = UserInformation().email.text;
   //
   // void _onItemTapped(int index) {
   //   setState(() {
   //     _selectedIndex = index;
   //   });
   // }
+
+  Stream<List<Payer>> readPayers() => FirebaseFirestore.instance
+      .collection('users')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Payer.fromJson(doc.data())).toList());
 
   @override
   void initState() {
@@ -66,6 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
     Location location = Location();
     await location.getCurrentLocation();
   }
+
+  // Future<String> getName() async {
+  //   String name =
+  //       (await FirebaseDatabase.instance.ref("users/$email/name").once())
+  //           .toString();
+  //   return name;
+  // }
 
   // getProfileImage() async {
   //   if (FirebaseAuth.instance.currentUser!.photoURL != null) {
@@ -85,19 +104,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    var name = '';
-    if (user != null && user!.displayName != null) {
-      if (user!.displayName != null) {
-        debugPrint(user!.displayName.toString());
-        name = user!.displayName!;
-        debugPrint(name);
-      } else {
-        name = 'Asjad';
-      }
-    } else {
-      name = 'Asjad';
-      debugPrint(name);
-    }
+    // name = globals.name;
+    // // debugPrint(UserInformation().name);
+    // if (user != null && user!.displayName != null) {
+    //   if (user!.displayName != null) {
+    //     debugPrint(user!.displayName.toString());
+    //     name = user!.displayName!;
+    //     debugPrint(name);
+    //   } else {}
+    // } else {}
     return Scaffold(
       backgroundColor: kIconColour,
       body: SafeArea(
@@ -146,17 +161,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               listen: false);
                           provider.logout();
-                          debugPrint(FirebaseAuth
-                              .instance.currentUser!.displayName
-                              .toString());
+                          // debugPrint(FirebaseAuth
+                          //     .instance.currentUser!.displayName
+                          //     .toString());
                           FirebaseAuth.instance.signOut();
                           // navigatorKey.currentState!
                           //     .popUntil((route) => route.isFirst);
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const LoginScreen(
-                                      onClickedSignUp: true)));
+                                  builder: (_) => const AuthScreen()));
                         },
                         itemBuilder: (context) => [
                           const PopupMenuItem(
@@ -202,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hey, $name!',
+                  'Hey, ${globals.name}!',
                   style: const TextStyle(
                     fontFamily: 'Raleway',
                     color: kIconColour,
@@ -261,6 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () {
+                                      debugPrint("${globals.name}d");
+                                      // debugPrint("${globals.name}e");
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -381,15 +397,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Locations'),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   selectedItemColor: kBackgroundColour,
-      //   onTap: _onItemTapped,
-      // ),
     );
   }
+  // bottomNavigationBar: BottomNavigationBar(
+  //   items: const <BottomNavigationBarItem>[
+  //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+  //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Locations'),
+  //   ],
+  //   currentIndex: _selectedIndex,
+  //   selectedItemColor: kBackgroundColour,
+  //   onTap: _onItemTapped,
+  // ),
+
 }

@@ -8,9 +8,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locpay/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:locpay/services/google_signin.dart';
-import 'package:locpay/services/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:locpay/widgets/utils.dart';
+import 'package:locpay/services/user_information.dart';
+import 'package:locpay/services/globals.dart' as globals;
+import 'package:locpay/widgets/textformfield.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignInWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -79,7 +82,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                           const Padding(
                             padding: EdgeInsets.all(15.0),
                             child: Text(
-                              "Welcome",
+                              'Welcome',
                               style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.w900,
@@ -88,130 +91,39 @@ class _SignInWidgetState extends State<SignInWidget> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15.0, right: 14, left: 14, bottom: 8),
-                            child: TextFormField(
-                              controller: emailController,
-                              textInputAction: TextInputAction.next,
-                              style: const TextStyle(
-                                color: kContainerColour,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                labelText: 'Email',
-                                labelStyle: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kContainerColour,
-                                ),
-                                hintText: "walterwhite@gmail.com",
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kHintColour,
-                                ),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 5.0),
-                              ),
-                              cursorColor: Colors.black,
-                              keyboardType: TextInputType.emailAddress,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.singleLineFormatter,
-                              ],
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (email) {
-                                email != null && !EmailValidator.validate(email)
-                                    ? 'Enter a valid email'
-                                    : null;
-                                return null;
-                              },
-                            ),
+                          textFormField(
+                            emailController,
+                            TextInputType.emailAddress,
+                            'Email',
+                            'walterwhite@gmail.com',
+                            validator: (email) {
+                              email != null && !EmailValidator.validate(email)
+                                  ? 'Enter a valid email'
+                                  : null;
+                              return null;
+                            },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5.0, right: 14, left: 14, bottom: 8),
-                            child: TextFormField(
-                              textInputAction: TextInputAction.done,
-                              controller: passwordController,
-                              obscureText: _obscureText,
-                              style: const TextStyle(
-                                color: kContainerColour,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.0,
-                                fontSize: 17,
+                          textFormField(
+                            passwordController,
+                            TextInputType.phone,
+                            'Password',
+                            'Atleast 6 characters',
+                            validator: (value) {
+                              value != null && value.length < 6
+                                  ? 'Enter minimum 6 characters'
+                                  : null;
+                              return null;
+                            },
+                            obscureText: _obscureText,
+                            suffixIcon: IconButton(
+                              splashRadius: 0.1,
+                              color: kContainerColour,
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                               ),
-                              decoration: InputDecoration(
-                                border: const UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                labelText: 'Password',
-                                labelStyle: const TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kContainerColour,
-                                ),
-                                hintText: "x37ru82#",
-                                hintStyle: const TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 17,
-                                  color: kHintColour,
-                                ),
-                                contentPadding: const EdgeInsets.fromLTRB(
-                                    20.0, 15.0, 20.0, 5.0),
-                                suffixIcon: IconButton(
-                                  color: kContainerColour,
-                                  icon: Icon(
-                                    _obscureText
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
-                                  onPressed: _toggle,
-                                ),
-                              ),
-                              cursorColor: Colors.black,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.singleLineFormatter,
-                              ],
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                value != null && value.length < 6
-                                    ? 'Enter minimum 6 characters'
-                                    : null;
-                                return null;
-                              },
+                              onPressed: _toggle,
                             ),
                           ),
                           Column(
@@ -240,25 +152,39 @@ class _SignInWidgetState extends State<SignInWidget> {
                               ),
                             ],
                           ),
-                          InkWell(
-                            onTap: signIn,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: MediaQuery.of(context).size.height / 18,
-                              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: kButtonColour,
+                          ElevatedButton(
+                            onPressed: () {
+                              signIn();
+                              // debugPrint('${emailController.text}j');
+                              // globals.email = emailController.text;
+                              // UserInformation().email = 'iohii';
+                              // UserInformation().email = EemailController.text;
+                              // debugPrint(UserInformation().email);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kButtonColour,
+                              // padding: const EdgeInsets.symmetric(
+                              //     vertical: 20.0, horizontal: 85.0),
+                              shadowColor: kIconColour,
+                              surfaceTintColor: kButtonColour,
+                              fixedSize: Size(
+                                MediaQuery.of(context).size.width / 2,
+                                MediaQuery.of(context).size.height / 18,
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'Log In',
-                                  style: TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: kContainerColour,
-                                  ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                // side: const BorderSide(color: Colors.black),
+                              ),
+                              elevation: 20.0,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Log In',
+                                style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: kContainerColour,
                                 ),
                               ),
                             ),
@@ -289,10 +215,8 @@ class _SignInWidgetState extends State<SignInWidget> {
                                       listen: false);
                               provider.googleLogin();
 
+                              debugPrint('${globals.name}k');
                               if (user != null) {
-                                debugPrint(user!.displayName.toString());
-                                UserInformation().name = user!.displayName!;
-
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -423,6 +347,8 @@ class _SignInWidgetState extends State<SignInWidget> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      readPayer();
+      debugPrint('${name}j');
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
 
